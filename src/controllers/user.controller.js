@@ -12,7 +12,6 @@ const handleRequest = (serviceFunction, reqQuery , reqFile, reqParam) => {
     });
   };
 
-  module.exports.getUser = handleRequest(userService.getUser,true);
   module.exports.userDetails = handleRequest(userService.userDetails);
-  module.exports.editUser = handleRequest(userService.editUser,false, true);
-  module.exports.addBulkQuestion = handleRequest(userService.addBulkQuestion,false, true);
+  module.exports.addUser = handleRequest(userService.addUser);
+  module.exports.loginUser = handleRequest(userService.loginUser);

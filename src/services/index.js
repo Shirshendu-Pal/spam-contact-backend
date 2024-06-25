@@ -1,7 +1,6 @@
 module.exports = {
-    authService: require('./auth.service'),
-   tokenService: require("./token.service"),
-   userService : require("./user.service"),
-   categoryService: require("./category.service"),
-   questionService: require("./question.service"),
+    userService : require("./user.service"),
+    authenticationService : require("./authentication.service"),
+    contactService : require("./contact.service"),
+   
 }

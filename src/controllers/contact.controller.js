@@ -1,6 +1,6 @@
-const httpStatus = require("http-status");
 const { catchAsync } = require("../utils/catchAsync");
-const { authService, tokenService } = require("../services");
+const { contactService, tokenService } = require("../services");
+const httpStatus = require("http-status");
 
 
 
@@ -12,5 +12,6 @@ const handleRequest = (serviceFunction, reqQuery , reqFile, reqParam) => {
     });
   };
 
-  module.exports.registerUser = handleRequest(authService.registerUser,false, true);
-  module.exports.loginUser = handleRequest(authService.loginUser);
+module.exports.addContact = handleRequest(contactService.addContact);
+module.exports.getContacts = handleRequest(contactService.getContacts);
+module.exports.addContactToSpam = handleRequest(contactService.addContactToSpam);

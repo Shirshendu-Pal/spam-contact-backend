@@ -1,59 +1,38 @@
-const mongoose = require("mongoose");
-const validator = require("validator");
-const jwt = require("jsonwebtoken");
+'use strict';
 
-const dotenv = require('dotenv');
+const bcrypt = require('bcryptjs');
 
-const path = require('path');
-const bcrypt = require("bcryptjs");
-dotenv.config({ path: path.join(__dirname, '../.env') });
-
-
-const userSchema = new mongoose.Schema({
-
-
-    email: {
-        type: String,
-        required: true,
-        unique: [true, "Email is already exist"],
-        validate(value) {
-            if (!validator.isEmail(value)) {
-                throw new Error("Invalid Email")
-            }
-        }
-    },
-
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
     name: {
-        type: String,
-        required: true,
-        unique: false
+      type: DataTypes.STRING,
     },
-
+    password:{
+      type: DataTypes.STRING,
+    },
     phone: {
-        type: String,
-        required: true,
-        unique: true
+      type: DataTypes.INTEGER,
     },
-    password: {
-        type: String,
-        required: true,
-
+    email: {
+      type: DataTypes.STRING,
     },
-    profilePic: String
-
-})
-
-userSchema.pre("save", async function (next) {
-    if (this.isModified("password")) {
-        this.password = await bcrypt.hash(this.password, 10)
-        console.log(this.password);
+  },{
+    hooks: {
+      beforeSave: async (user, options) => {
+        if (user.changed('password')) {
+          user.password = await bcrypt.hash(user.password, 10);
+        }
+      }
     }
-    next()
-})
+  });
 
+  User.associate = (models) => {
+    User.hasMany(models.Token, {
+      foreignKey: 'userId',
+      as: 'tokens'
+    });
+  };
 
+  return User;
+};
 
-
-
-
-module.exports = mongoose.model("User", userSchema);

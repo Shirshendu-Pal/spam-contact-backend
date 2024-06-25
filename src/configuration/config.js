@@ -6,7 +6,6 @@ dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 const envVarsSchema = Joi.object().keys({ 
     SERVER_PORT: Joi.number().default(8080),
-    MONGODB_URL: Joi.string().required(),
     SECRET_KEY: Joi.string().required(),
 
 }).unknown()
@@ -18,16 +17,6 @@ if (error)
 
     module.exports = {
         serverPort: envVars.SERVER_PORT,
-
-        mongoose: {
-            url: envVars.MONGODB_URL,
-            options: {
-                useCreateIndex: true,
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-                useFindAndModify: false
-            }
-        },
 
         jwt: {
             secret: envVars.SECRET_KEY,

@@ -1,37 +1,38 @@
-const mongoose = require("mongoose");
-const tokenTypes = require("../configuration/tokens");
+'use strict';
 
-const tokenSchema = new mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "User"
+module.exports = (sequelize, DataTypes) => {
+  const Token = sequelize.define('Token', {
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Users',
+        key: 'id',
+      },
     },
     token: {
-        type: String,
-        required: true,
-        index: true
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
     expires: {
-        type: Date,
-        required: true
+      type: DataTypes.DATE,
+      allowNull: false,
     },
     type: {
-        type: String,
-        enum: [tokenTypes.REFRESH, tokenTypes.RESET_PASSWORD_LINK, tokenTypes.MAIL_VERIFY, tokenTypes.RESET_PASSWORD_OTP],
-        required: true
-    }
-}, { timestamps: true });
+      type: DataTypes.ENUM('refresh', 'reset_password_link', 'mail_verify', 'reset_password_otp'),
+      allowNull: false,
+    },
+  }, {
+    timestamps: true,
+  });
 
-// tokenSchema.methods.generateAuthToken = async function () {
-//     try {
-//         let token = jwt.sign({_id: this._id}, process.env.SECRET_KEY)
-//         this.tokens = this.tokens.concat({token:token})
-//         await this.save();
-//         return token;
-//     } catch (error) {
-//        console.log(error); 
-//     }
-// }
+  Token.associate = (models) => {
+    Token.belongsTo(models.User, {
+      foreignKey: 'userId',
+      as: 'user',
+    });
+  };
 
-module.exports = mongoose.model('Token', tokenSchema);
+  return Token;
+};
